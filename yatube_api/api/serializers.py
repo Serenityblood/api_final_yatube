@@ -52,6 +52,8 @@ class FollowSerializer(serializers.ModelSerializer):
         ]
 
     def validate_following(self, value):
+        if self.context['request'].user == value:
+            raise serializers.ValidationError('Нельзя пописываться на себя!')
         if not User.objects.filter(username=value):
             raise serializers.ValidationError('Такого пользоватля нет!')
         return value
